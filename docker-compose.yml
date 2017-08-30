@@ -1,0 +1,28 @@
+version: '2'
+
+services:
+  # PostgreSQL database
+
+  # Redis
+  api:
+     image: direpos.capitalonline.net/coretasker:base
+     restart: always
+     working_dir: /code
+     command: bash -c "python manage.py runserver 0.0.0.0:9000"
+     volumes:
+       -  /data/whatever:/code
+     ports:
+       - "9000:9000"
+     labels:
+       name: zhihu_api
+
+  # Celery worker
+  celery:
+     image: direpos.capitalonline.net/coretasker:base
+     restart: always
+     command: bash -c "export C_FORCE_ROOT=true && celery -A settings.celery worker -l info -Q action,check,clone -f logs/celery.log"
+     volumes:
+       -  /data/whatever:/code
+     working_dir: /code
+     labels:
+       name: zhihu_celery
