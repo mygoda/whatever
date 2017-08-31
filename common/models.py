@@ -24,3 +24,13 @@ class ZhihuAuthorization(models.Model):
     """
 
     value = models.CharField(u"值", max_length=255)
+
+    @classmethod
+    def header_value(cls):
+        return cls.objects.all()[0].value
+
+
+class ZhihuStartMember(models.Model):
+
+    url_token = models.CharField(u"url", max_length=255)
+    is_valid = models.CharField(u"是否有效", default=True)

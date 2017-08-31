@@ -1,9 +1,6 @@
 version: '2'
 
 services:
-  # PostgreSQL database
-
-  # Redis
   api:
      image: direpos.capitalonline.net/coretasker:base
      restart: always
@@ -20,7 +17,7 @@ services:
   celery:
      image: direpos.capitalonline.net/coretasker:base
      restart: always
-     command: bash -c "export C_FORCE_ROOT=true && celery -A settings.celery worker -l info -Q action,check,clone -f logs/celery.log"
+     command: bash -c "export C_FORCE_ROOT=true && celery -A whatever.celery worker -l info -f logs/celery.log"
      volumes:
        -  /data/whatever:/code
      working_dir: /code
