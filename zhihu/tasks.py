@@ -52,7 +52,9 @@ def zhihu_spider_followers_by_token(url_token="", first=False, type="f"):
             add_member_follower(
                 member_url_token=url_token,
                 follower_id=follower_member.id)
+            enqueue_rq(func=zhihu_spider_followers_by_token, url_token=url_token)
     except Exception as e:
+        print("error %s" % traceback.format_exc())
         logger.error("error %s" % traceback.format_exc())
 
 
