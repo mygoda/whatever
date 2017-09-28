@@ -42,6 +42,7 @@ def zhihu_spider_followers_by_token(url_token="", first=False, type="f"):
             if not member_exists(url_token=url_token):
                 raise Exception(u"first url_token should exists 。。。")
         result = zhihu_req_get(url=follower_url)
+        print(result)
         paging = result.get("paging", {})
         update_member_followers(
             url_token=url_token,
