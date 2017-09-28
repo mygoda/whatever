@@ -7,7 +7,6 @@ from service.uuids import create_uuid
 
 class CommonModelMixin(models.Model):
 
-    id = models.CharField(u"UID", max_length=36, primary_key=True, default=create_uuid)
     updated_at = models.DateTimeField(auto_now=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -24,13 +23,21 @@ class ZhihuAuthorization(models.Model):
     """
 
     value = models.CharField(u"值", max_length=255)
+    UDID = models.CharField(u"UUID", max_length=255, null=True, blank=True)
+    agent = models.TextField(u"浏览器代理", default="", null=True, blank=True)
 
     @classmethod
     def header_value(cls):
-        return cls.objects.all()[0].value
+        item = cls.objects.all()[0]
+        headers = {
+            "authorization": item.value,
+            "X-UDID": item.UDID,
+            "User-Agent": item.agent
+        }
+        return headers
 
 
 class ZhihuStartMember(models.Model):
 
     url_token = models.CharField(u"url", max_length=255)
-    is_valid = models.CharField(u"是否有效", default=True)
+    is_valid = models.BooleanField(u"是否有效", default=True)

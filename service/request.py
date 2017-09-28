@@ -32,7 +32,7 @@ def zhihu_req_get(url):
     :param data: 
     :return: 
     """
-    headers = {"authorization": ZhihuAuthorization.header_value()}
+    headers = ZhihuAuthorization.header_value()
     response = requests.get(url, headers=headers)
     result = zhihu_req_result(response=response)
     return result

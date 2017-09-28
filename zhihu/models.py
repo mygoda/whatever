@@ -18,11 +18,13 @@ class ZhihuMember(CommonModelMixin, models.Model):
     user_type = models.CharField(u"用户类型", max_length=16, null=True, blank=True)
     url_token = models.CharField(u"用户URL", max_length=32, unique=True)
     is_advertiser = models.BooleanField("是否广告", default=False)
-    avatar_url = models.CharField(u"头像", max_length=255)
+    avatar_url = models.CharField(u"头像", max_length=255, null=True, blank=True)
     is_org = models.BooleanField(u"是否组织", default=False)
-    type = models.CharField(u"类型", max_length=32)
-    zhihu_id = models.CharField(u"知乎ID", max_length=36, unique=True)
+    type = models.CharField(u"类型", max_length=32, null=True, blank=True)
+    zhihu_id = models.CharField(u"知乎ID", max_length=36, null=True, blank=True)
     headline = models.CharField(u"headline", max_length=128, null=True, blank=True)
+    w_count = models.IntegerField(u"关注了", default=1)
+    f_count = models.IntegerField(u"关注者", default=1)
 
     def __str__(self):
         return self.name
