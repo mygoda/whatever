@@ -12,7 +12,6 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 
 import os
 from datetime import timedelta
-from kombu import Queue, Exchange
 
 # ^^^ The above is required if you want to import from the celery
 # library.  If you don't have this then `from celery.schedules import`
@@ -20,18 +19,6 @@ from kombu import Queue, Exchange
 # for relative imports by default.
 
 # Celery settings
-
-CELERY_BROKER_URL = 'redis://:cds-china@172.20.3.18:6379/9'
-
-#: Only add pickle to this list if your broker is secured
-#: from unwanted access (see userguide/security.html)
-CELERY_ACCEPT_CONTENT = ['json']
-CELERY_RESULT_BACKEND = 'db+sqlite:///results.sqlite'
-CELERY_TASK_SERIALIZER = 'json'
-CELERY_RESULT_EXPIRES = 60 * 60 * 24
-CELERY_TIMEZONE = 'Asia/Shanghai'
-CELERY_ENALBLE_UTC = True
-CELERY_TASK_TIME_LIMIT = 60 * 60
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
