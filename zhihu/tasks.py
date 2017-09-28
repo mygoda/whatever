@@ -34,6 +34,7 @@ def zhihu_spider_followers_by_token(url_token="", first=False, type="f"):
         知乎 爬虫
     :return:
     """
+    result = ""
     try:
         follower_url = generate_follower_url(url_token=url_token)
         if first:
@@ -54,7 +55,7 @@ def zhihu_spider_followers_by_token(url_token="", first=False, type="f"):
                 follower_id=follower_member.id)
             enqueue_rq(func=zhihu_spider_followers_by_token, url_token=url_token)
     except Exception as e:
-        print("error %s" % traceback.format_exc())
+        print("result %s error %s" % (result, traceback.format_exc()))
         logger.error("error %s" % traceback.format_exc())
 
 
