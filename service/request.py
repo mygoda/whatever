@@ -22,6 +22,8 @@ def zhihu_req_result(response):
             logger.error("get zhihu response error %s" % result)
             raise Exception("error %s" % result)
         return result
+    else:
+        raise Exception(response.content)
 
 
 def zhihu_req_get(url):
