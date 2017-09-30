@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 
 import os
 from datetime import timedelta
+import raven
 
 # ^^^ The above is required if you want to import from the celery
 # library.  If you don't have this then `from celery.schedules import`
@@ -45,6 +46,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'raven.contrib.django.raven_compat',
     'suit',
     'suit_rq',
     "django_rq",
@@ -68,6 +70,15 @@ RQ_QUEUES = {
         'DEFAULT_TIMEOUT': 500,
     },
 }
+
+
+RAVEN_CONFIG = {
+    'dsn': 'https://7497dfdd48b54515b24698243d306406:b87634dc2f904f129b2736d7fd59374c@sentry.io/224284',
+    # If you are using git, you can also automatically configure the
+    # release based on the git info.
+    'release': raven.fetch_git_sha(os.path.dirname(os.pardir)),
+}
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -159,3 +170,56 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
+
+LOG_FORMAT = '%(levelname)s %(asctime)s' \
+    ' %(module)s %(process)d %(thread)d' \
+    ' %(pathname)s %(lineno)s' \
+    ' %(funcName)s' \
+    ' %(message)s'
+
+LOG_FILE = os.path.join(BASE_DIR, "logs", "info.log")
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    'formatters': {
+        'verbose': {
+            'format': LOG_FORMAT
+        },
+    },
+    "handlers": {
+        "rq_console": {
+            "level": "INFO",
+            "class": "rq.utils.ColorizingStreamHandler",
+            "formatter": "verbose",
+        },
+        'info': {
+            'level': 'INFO',
+            'class': 'logging.handlers.TimedRotatingFileHandler',
+            'filename': LOG_FILE,
+            'when': 'D',
+            'formatter': 'verbose'
+        },
+        'sentry': {
+            'level': 'ERROR',
+            'class': 'raven.contrib.django.handlers.SentryHandler',
+        },
+
+    },
+    'loggers': {
+        "rq.worker": {
+            "handlers": ["rq_console", "info", "sentry"],
+            "level": "INFO"
+        },
+        'service': {
+            'handlers': ['info', "sentry"],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+        'zhihu': {
+            'handlers': ['info', "sentry"],
+            'level': 'INFO',
+            'propagate': True,
+        },
+    }
+}

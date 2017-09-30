@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 
 
 def sleep_random_time():
-    seconds = random.randrange(10)
+    seconds = random.randrange(5)
     time.sleep(seconds)
 
 

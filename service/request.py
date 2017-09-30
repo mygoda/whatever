@@ -23,6 +23,7 @@ def zhihu_req_result(response):
             raise Exception("error %s" % result)
         return result
     else:
+        logger.error("error %s" % response.content)
         raise Exception(response.content)
 
 
