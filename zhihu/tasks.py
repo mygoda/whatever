@@ -5,8 +5,15 @@ from service.request import zhihu_req_get
 from service.member import add_member, member_exists, add_member_follower, update_member_followers
 import logging
 import django_rq
+import time
+import random
 
 logger = logging.getLogger(__name__)
+
+
+def sleep_random_time():
+    seconds = random.randrange(10)
+    time.sleep(seconds)
 
 
 def enqueue_rq(func, **kwargs):
@@ -35,6 +42,7 @@ def zhihu_spider_followers_by_token(url_token="", first=False, type="f"):
     :return:
     """
     result = ""
+    sleep_random_time()
     try:
         follower_url = generate_follower_url(url_token=url_token)
         if first:
@@ -42,7 +50,6 @@ def zhihu_spider_followers_by_token(url_token="", first=False, type="f"):
             if not member_exists(url_token=url_token):
                 raise Exception(u"first url_token should exists 。。。")
         result = zhihu_req_get(url=follower_url)
-        print(result)
         paging = result.get("paging", {})
         update_member_followers(
             url_token=url_token,
@@ -66,6 +73,7 @@ def zhihu_spider_followers_by_url(next_url, url_token, type="f"):
     :return:
     """
     try:
+        sleep_random_time()
         print("url_token %s in follow by next" % url_token)
         result = zhihu_req_get(url=next_url)
         paging = result.get("paging", {})
@@ -86,6 +94,7 @@ def zhihu_spider_followers_next(paging, url_token):
     :param paging:
     :return:
     """
+    sleep_random_time()
     print("url %s in next" % url_token)
     if paging.get("is_end", False):
         return
